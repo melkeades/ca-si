@@ -1,0 +1,22 @@
+{
+    "sourceFile": "vite.config.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1699367820894,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1699368277804,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,11 +4,11 @@\n \r\n // vite.config.js\r\n export default defineConfig({\r\n   // plugins: [eslintPlugin({ cache: false })],\r\n-  plugins: [basicSsl()],\r\n+  // plugins: [basicSsl()],\r\n   server: {\r\n-    https: true,\r\n+    // https: true,\r\n     host: 'localhost',\r\n     cors: '*',\r\n     hmr: {\r\n       host: 'localhost',\r\n"
+                }
+            ],
+            "date": 1699367820894,
+            "name": "Commit-0",
+            "content": "import { defineConfig } from 'vite'\r\nimport basicSsl from '@vitejs/plugin-basic-ssl'\r\n// import eslintPlugin from 'vite-plugin-eslint'\r\n\r\n// vite.config.js\r\nexport default defineConfig({\r\n  // plugins: [eslintPlugin({ cache: false })],\r\n  plugins: [basicSsl()],\r\n  server: {\r\n    https: true,\r\n    host: 'localhost',\r\n    cors: '*',\r\n    hmr: {\r\n      host: 'localhost',\r\n      protocol: 'ws',\r\n    },\r\n    watch: {\r\n      usePolling: true,\r\n    },\r\n  },\r\n  build: {\r\n    // sourcemap: 'inline',\r\n    minify: true,\r\n    manifest: true,\r\n    rollupOptions: {\r\n      input: './main.js',\r\n      output: {\r\n        format: 'umd',\r\n        entryFileNames: 'main.js',\r\n        esModule: false,\r\n        compact: true,\r\n        globals: {\r\n          jquery: '$',\r\n        },\r\n      },\r\n      external: ['jquery'],\r\n    },\r\n  },\r\n})\r\n"
+        }
+    ]
+}

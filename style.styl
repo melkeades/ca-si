@@ -1,0 +1,27 @@
+html.lenis
+  height auto
+
+.lenis.lenis-smooth
+  scroll-behavior auto
+
+.lenis.lenis-smooth [data-lenis-prevent]
+  overscroll-behavior contain
+
+.lenis.lenis-stopped
+  overflow hidden
+
+.lenis.lenis-scrolling iframe
+  pointer-events none
+
+.splide.is-initialized:not(.is-active) .splide__list
+  display flex !important
+  gap 2rem
+
+.arrow, .round-arrow
+  user-select none
+
+.testimonials__slider, .presence__slider, .bump__slider, .study-gallery__slider
+  .splide__track
+    overflow visible
+
+/*------------------------------*/
