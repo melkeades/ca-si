@@ -47,7 +47,7 @@ ScrollTrigger.create({
   start: vh(100) + ' top',
   toggleActions: 'play none none reverse',
 })
-devMode(0)
+devMode(1)
 function home() {
   mq.add('(min-width: 992px)', () => {
     selAll('.tabs__tab').forEach((tab) => {
@@ -61,7 +61,7 @@ function home() {
   stInit(-50, 'tabs__img-shadow', 'tabs-wrap')
   stInit(-100, 'laptop-wrap', 'tabs-wrap')
   stInit(-50, 'laptop__video-wrap', 'tabs-wrap')
-  stInit(-100, 'lalptop__dots', 'tabs-wrap')
+  stInit(-80, 'laptop__dots', 'tabs-wrap')
   stInit(100, 'ricing__featured-bg__lines', 'pricing__featured-bg')
   stInit(250, 'pricing__featured-bg__dots', 'pricing__featured-bg')
   stInit(100, 'footer__bg__lines-1', 'cta__bg')
@@ -276,10 +276,6 @@ window.addEventListener(
 )
 
 function stInit(distance = 0, elClassName = '', sectionClassName = '') {
-  // if(sectionClassName === '') {
-  //   sectionClassName = elClassName
-  //   triggerStart = ''
-  // }
   sectionClassName = sectionClassName || elClassName
   return ScrollTrigger.create({
     animation: gsap.fromTo('.' + elClassName, { y: -distance }, { y: distance, ease: 'none' }),
