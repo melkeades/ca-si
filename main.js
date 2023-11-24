@@ -47,7 +47,7 @@ ScrollTrigger.create({
   start: vh(100) + ' top',
   toggleActions: 'play none none reverse',
 })
-devMode(1)
+devMode(0)
 function home() {
   mq.add('(min-width: 992px)', () => {
     selAll('.tabs__tab').forEach((tab) => {
