@@ -47,28 +47,48 @@ ScrollTrigger.create({
   start: vh(100) + ' top',
   toggleActions: 'play none none reverse',
 })
-
+devMode(0)
 function home() {
-  mq.add('(min-width: 992px)', () => {})
+  mq.add('(min-width: 992px)', () => {
+    selAll('.tabs__tab').forEach((tab) => {
+      const width = tab.getBoundingClientRect().width
+      tab.style.width = width + 'px'
+    })
+  })
+  stInit(-50, 'hero__video', 'hero')
+  stInit(150, 'hero__bg__lines', 'hero')
+  stInit(250, 'hero__bg__circles', 'hero')
+  stInit(-50, 'tabs__img-shadow', 'tabs-wrap')
+  stInit(-100, 'laptop-wrap', 'tabs-wrap')
+  stInit(-50, 'laptop__video-wrap', 'tabs-wrap')
+  stInit(-100, 'lalptop__dots', 'tabs-wrap')
+  stInit(100, 'ricing__featured-bg__lines', 'pricing__featured-bg')
+  stInit(250, 'pricing__featured-bg__dots', 'pricing__featured-bg')
+  stInit(100, 'footer__bg__lines-1', 'cta__bg')
+  stInit(80, 'footer__bg__lines-2', 'cta__bg')
+  stInit(150, 'footer__bg__dots-1', 'cta__bg')
+  stInit(150, 'footer__bg__dots-2', 'cta__bg')
   logosSliderInit()
+  testSliderInit()
+  sel('.pricing__toggle-wrap').addEventListener('click', (e) => {
+    sel('#pricing').checked ^= 1
+  })
   mq.add('(max-width: 991px)', () => {})
   console.log('sf')
 }
 function terms() {}
 
-function contact() {
-  testSliderInit()
-}
+function contact() {}
 function logosSliderInit() {
   const logosSlider = new Splide('.logos__slider', {
     arrows: false,
     pagination: false,
     gap: '4rem',
     type: 'loop',
-    // focus: 'center',
     autoWidth: true,
     autoScroll: { speed: 1, autoStart: false },
   })
+  // if not enough logos it will center them and stop the slider
   const Components = logosSlider.Components
   // to remove duplicates for inactive/small slider
   logosSlider.on('overflow', function (isOverflow) {
@@ -80,12 +100,12 @@ function logosSliderInit() {
       clones: isOverflow ? undefined : 0, // Toggle clones
     }
   })
-  let s2Overflow = true
-  let s2Ready = false
+  let sliderOverflow = true
+  let sliderReady = false
   // to center inactive/small slider
   logosSlider.on('resized', function () {
     var isOverflow = Components.Layout.isOverflow()
-    s2Overflow = isOverflow
+    sliderOverflow = isOverflow
     var list = Components.Elements.list
     var lastSlide = Components.Slides.getAt(logosSlider.length - 1)
 
@@ -96,233 +116,97 @@ function logosSliderInit() {
       // Remove the last margin
       if (!isOverflow) {
         lastSlide.slide.style.marginRight = ''
-        // console.log('asdf')
       }
     }
-    if (s2Ready) {
+    if (sliderReady) {
       s2PlayInit()
     }
   })
   logosSlider.on('mounted', s2PlayInit)
   function s2PlayInit() {
-    s2Ready = true
-    if (!s2Overflow) {
+    sliderReady = true
+    if (!sliderOverflow) {
       logosSlider.Components.AutoScroll.pause()
-    } else if (s2Overflow && logosSlider.Components.AutoScroll.isPaused()) {
+    } else if (sliderOverflow && logosSlider.Components.AutoScroll.isPaused()) {
       logosSlider.Components.AutoScroll.play()
     }
   }
   logosSlider.mount({ AutoScroll })
 }
-function teamSliderInit(oldPrevHandler, oldNextHandler) {
-  const teamSlider = new Splide('.team__slider', {
-    arrows: false,
-    pagination: false,
-    type: 'loop',
-    perPage: 2,
-    perMove: 2,
-    gap: '4rem',
-    destroy: true,
-    breakpoints: {
-      991: {
-        destroy: false,
-      },
-      767: {
-        gap: '1rem',
-      },
-      474: {
-        perPage: 1,
-        perMove: 1,
-      },
-    },
-  }).mount()
-
-  const [prevHandler, nextHandler] = initSplideArrows(teamSlider, '.team__arrows', oldPrevHandler, oldNextHandler)
-
-  return [teamSlider, prevHandler, nextHandler]
-}
-function initSplideArrows(splideItem, arrowsWrapClass = '.arrows', oldPrevHandler, oldNextHandler) {
-  const prev$ = sel(arrowsWrapClass + ' .arrow--left')
-  const next$ = sel(arrowsWrapClass + ' .arrow:not(.arrow--left)')
-  if (oldNextHandler) {
-    prev$.removeEventListener('click', oldPrevHandler)
-    next$.removeEventListener('click', oldNextHandler)
-  }
-  const prevHandler = () => splideItem.go('>')
-  const nextHandler = () => splideItem.go('<')
-
-  prev$.addEventListener('click', prevHandler)
-  next$.addEventListener('click', nextHandler)
-  return [prevHandler, nextHandler]
-}
-//
-// < SLIDERS -----------------------
-//
 function testSliderInit() {
-  const testSlider = new Splide('.testimonials__slider', {
+  const name = 'testimonials'
+  const testSlider = new Splide(`.${name}__slider`, {
     arrows: false,
     pagination: false,
     gap: '2rem',
-    type: 'loop',
-    perPage: 2,
-    // focus: 'center',
-    // autoWidth: true,
-    breakpoints: {
-      991: {
-        perPage: 1,
-      },
-      767: {
-        gap: '1rem',
-      },
-    },
-    autoScroll: { speed: 1, autoStart: true },
-  }).mount({ AutoScroll })
-
-  sel('.testimonials__arrows .arrow--left').addEventListener('click', (e) => {
-    testSlider.go('+1')
-  })
-  sel('.testimonials__arrows .arrow:not(.arrow--left)').addEventListener('click', (e) => {
-    testSlider.go('-1')
-  })
-}
-function presenceSliderInit() {
-  const presenceSplide = new Splide('.presence__slider', {
-    arrows: false,
-    pagination: false,
-    gap: '3rem',
-    // type: 'loop',
-    perPage: 3,
-    // focus: 'center',
-    // autoWidth: true,
-    breakpoints: {
-      991: {
-        perPage: 2,
-      },
-      767: {
-        perPage: 1,
-      },
-    },
-  }).mount()
-
-  sel('.presence__arrows .round-arrow--left').addEventListener('click', (e) => {
-    presenceSplide.go('+1')
-  })
-  sel('.presence__arrows .round-arrow:not(.round-arrow--left)').addEventListener('click', (e) => {
-    presenceSplide.go('-1')
-  })
-}
-
-function trendsSliderInit() {
-  const trendsSplide = new Splide('.trends__slider', {
-    arrows: false,
-    pagination: false,
-    gap: '2rem',
-    perPage: 3,
-    // focus: 'center',
-    // autoWidth: true,
-    breakpoints: {
-      991: {
-        perPage: 2,
-      },
-      767: {
-        perPage: 1,
-        gap: '1rem',
-      },
-    },
-  })
-  if (document.readyState !== 'loading') {
-    initCode()
-  } else {
-    document.addEventListener('DOMContentLoaded', function () {
-      initCode()
-    })
-  }
-  function initCode() {
-    trendsSplide.mount()
-  }
-
-  sel('.trends__slider .round-arrow--left').addEventListener('click', (e) => {
-    trendsSplide.go('+1')
-  })
-  sel('.trends__slider .round-arrow:not(.round-arrow--left)').addEventListener('click', (e) => {
-    trendsSplide.go('-1')
-  })
-}
-function bumpSliderInit() {
-  const bumpSplide = new Splide('.bump__slider', {
-    arrows: false,
-    pagination: false,
-    // gap: '3rem',
     type: 'loop',
     perPage: 1,
-    // focus: 'center',
-    // autoWidth: true,
-    breakpoints: {},
-  }).mount()
+    speed: 1500,
+    easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+  })
 
-  selAll('.bump__arrows .arrow--left').forEach((e) => {
-    e.addEventListener('click', () => {
-      bumpSplide.go('+1')
-    })
-  })
-  selAll('.bump__arrows .arrow:not(.arrow--left)').forEach((e) => {
-    e.addEventListener('click', () => {
-      bumpSplide.go('-1')
-    })
-  })
-}
-function studyGallerySliderInit() {
-  const studyGallerySplide = new Splide('.study-gallery__slider', {
+  const testImgSlider = new Splide(`.${name}__img-slider`, {
+    type: 'fade',
+    rewind: true,
     arrows: false,
     pagination: false,
-    gap: '4rem',
-    type: 'loop',
-    perPage: 2,
-    focus: 'center',
-    drag: 'free',
-    breakpoints: {
-      991: {
-        perPage: 1,
-      },
-      767: {
-        gap: '1rem',
-      },
-    },
-    autoScroll: { speed: 0.5, autoStart: true },
+    perPage: 1,
+    speed: 1000,
   })
-  const bar = studyGallerySplide.root.querySelector('.study-gallery__progress__bar')
+  testImgSlider.sync(testSlider)
+  testSlider.mount()
+  testImgSlider.mount()
 
-  studyGallerySplide.on('mounted active', function () {
-    var end = studyGallerySplide.Components.Controller.getEnd() + 1
-    var rate = Math.min((studyGallerySplide.index + 1) / end, 1)
-    bar.style.width = String(100 * rate) + '%'
+  sel(`.${name}__arrows-wrap .arrow--left`).addEventListener('click', (e) => {
+    testSlider.go('-1')
   })
-  studyGallerySplide.mount({ AutoScroll })
-}
-function studyMoreSliderInit() {
-  const studyMoreSlider = new Splide('.study-more__slider', {
-    arrows: false,
-    pagination: false,
-    gap: '4rem',
-    type: 'loop',
-    perPage: 2,
-    // focus: 'center',
-    // autoWidth: true,
-    breakpoints: {
-      991: {
-        perPage: 1,
-      },
-      767: {
-        gap: '1rem',
-      },
-    },
-  }).mount()
+  sel(`.${name}__arrows-wrap .arrow:not(.arrow--left)`).addEventListener('click', (e) => {
+    testSlider.go('+1')
+  })
+  const pagination$ = sel(`.${name}__pagination`)
 
-  sel('.study-more__arrows .arrow--left').addEventListener('click', (e) => {
-    studyMoreSlider.go('+1')
-  })
-  sel('.study-more__arrows .arrow:not(.arrow--left)').addEventListener('click', (e) => {
-    studyMoreSlider.go('-1')
+  let bulletPressed = false
+  if (testSlider.length > 1) {
+    const bullet$ = sel(`.${name}__pagination .bullet:not(.bullet--active)`)
+    let fragment = document.createDocumentFragment()
+    for (let i = 0; i < testSlider.length; i++) {
+      let clone$ = bullet$.cloneNode(true)
+      clone$.addEventListener('click', (e) => {
+        bulletPressed = true
+        testImgSlider.go(i)
+      })
+      fragment.appendChild(clone$)
+    }
+    fragment.firstChild.classList.add('bullet--active')
+    pagination$.replaceChildren(fragment)
+  } else {
+    pagination$.replaceChildren()
+  }
+  const comp = testSlider.Components
+  let slideMetaTl
+  const length = testSlider.length - 1
+  testSlider.on('move', function (newIndex, oldIndex) {
+    sel(`.${name}__pagination .bullet--active`).classList.remove('bullet--active')
+    sel(`.${name}__pagination .bullet:nth-of-type(${testSlider.index + 1})`).classList.add('bullet--active')
+    let toRight = false
+    if (bulletPressed) {
+      toRight = newIndex > oldIndex
+      bulletPressed = false
+    } else {
+      toRight = (newIndex > oldIndex && !(oldIndex === 0 && newIndex === length)) || (newIndex === 0 && oldIndex === length)
+    }
+    const newActiveSlide$ = testSlider.Components.Elements.slides[newIndex]
+    const newActiveMeta$ = newActiveSlide$.querySelectorAll('.testimonials__meta>div')
+    const oldActiveSlide$ = testSlider.Components.Elements.slides[oldIndex]
+    const direction = toRight ? 1 : -1
+    gsap.fromTo(newActiveSlide$, { opacity: 0 }, { opacity: 1, duration: 1 })
+    if (slideMetaTl?.isActive) slideMetaTl.kill()
+    slideMetaTl = gsap.fromTo(
+      [...newActiveMeta$],
+      { opacity: 0, x: 50 * direction },
+      { opacity: 1, x: 0, duration: 4, stagger: { amount: 0.3 }, ease: 'expo.out' }
+    )
+    gsap.fromTo(oldActiveSlide$, { opacity: 1 }, { opacity: 0, duration: 1 })
   })
 }
 function removeSplideClasses(slider) {
@@ -348,23 +232,62 @@ function addSplideClasses(slider) {
   slide.forEach((slide) => slide.classList.add('splide__slide'))
 }
 
-function showSplideMq(splide, splideClass, breakpoint = mqt, relativeToBp = '<', arrows = false) {
-  let splideItem = {}
+function devMode(mode) {
+  if (mode === 0) {
+    return
+  } else if (mode === 1) {
+    let i = 0
+    document.querySelectorAll('[data-video-urls]').forEach((el) => {
+      el.querySelector('video').remove()
+      i++
+    })
+    console.log('devMode, removed videos:', i)
+  } else if (mode === 2) {
+    const devRemoveList = []
+    // const devRemoveList = [videoHero$, introSec$, aboutSec$]
+    devRemoveList.forEach((el) => {
+      el.remove()
+    })
+    // sel('.page-wrapper').style.paddingTop = '80vh'
+    console.log('devMode: removing sections')
+  }
+}
 
-  const addSplide = () => {
-    addSplideClasses(splideClass)
-    splideItem = splide(Object.keys(splideItem).length)
-  }
-  const removeSplide = () => {
-    if (Object.keys(splideItem).length) {
-      removeSplideClasses(splideClass)
-      splideItem.destroy() // to avoid the slides width issues on viewport resize
-    }
-  }
-  mq.add(`(min-width: ${breakpoint + 1}px)`, () => {
-    relativeToBp === '>' ? addSplide() : removeSplide()
+const shiftUpElements = document.querySelectorAll('.up-50, [up-50]')
+function shiftElementsInit() {
+  shiftUpElements.forEach((e) => {
+    const elementHeight = e.getBoundingClientRect().height
+    e.style.marginBottom = -elementHeight / 2 + 'px'
   })
-  mq.add(`(max-width: ${breakpoint}px)`, () => {
-    relativeToBp === '>' ? removeSplide() : addSplide()
+}
+shiftElementsInit()
+function debounce(func, time = 100) {
+  let timer
+  return function (event) {
+    if (timer) clearTimeout(timer)
+    timer = setTimeout(func, time, event)
+  }
+}
+window.addEventListener(
+  'resize',
+  debounce(() => {
+    shiftElementsInit()
+  })
+)
+
+function stInit(distance = 0, elClassName = '', sectionClassName = '') {
+  // if(sectionClassName === '') {
+  //   sectionClassName = elClassName
+  //   triggerStart = ''
+  // }
+  sectionClassName = sectionClassName || elClassName
+  return ScrollTrigger.create({
+    animation: gsap.fromTo('.' + elClassName, { y: -distance }, { y: distance, ease: 'none' }),
+    trigger: '.' + sectionClassName,
+    start: 'top bottom',
+    end: 'bottom top',
+    // markers: true,
+    scrub: true,
+    delay: 0.0,
   })
 }

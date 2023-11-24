@@ -1,3 +1,6 @@
+[slider-cut] .splide__slide  
+  display block !important
+
 html.lenis
   height auto
 
@@ -20,8 +23,73 @@ html.lenis
 .arrow, .round-arrow
   user-select none
 
-.testimonials__slider, .presence__slider, .bump__slider, .study-gallery__slider
+.testimonials__img-slider
   .splide__track
-    overflow visible
+    overflow: visible !important
+    
+.pricing__switch {
+  display: inline-block;
+  height: 34px;
+  position: relative;
+  width: 60px;
+}
+
+.pricing__switch input {
+  display:none;
+}
+
+.pricing__switch_bg {
+  background-color: #ccc;
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: .4s;
+}
+
+.pricing__switch__bg::before {
+  background-color: #fff;
+  bottom: 4px;
+  content: "";
+  height: 26px;
+  left: 4px;
+  position: absolute;
+  transition: .4s;
+  width: 26px;
+}
+
+.pricing__switch__input:checked + .pricing__switch__bg {
+  background-color: #66bb6a;
+}
+
+.pricing__switch__input:checked + .pricing__switch__bg:before {
+  transform: translateX(26px);
+}
+
+.pricing__switch__bg {
+  border-radius: 34px;
+}
+
+.pricing__switch__bg::before {
+  border-radius: 50%;
+}
+
+
+/*
+.tabs__tab:not(:last-of-type):not(.w--current)::after
+  content ''
+  position absolute
+  right 0
+  top 30%
+  width 1px
+  height 100%
+  background-color rgba(0, 0, 0, .15)
+  transition all 300ms
+
+.tabs__tab:has(+ .w--current)::after, .tabs__tab:hover::after, .tabs__tab:has(+ :hover)::after
+  background-color rgba(0, 0, 0, 0) !important
+*/
 
 /*------------------------------*/
