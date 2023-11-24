@@ -1,3 +1,6 @@
+:root
+  --ease-out-expo cubic-bezier(0.16, 1, 0.3, 1)
+
 [slider-cut] .splide__slide  
   display block !important
 
@@ -26,54 +29,63 @@ html.lenis
 .testimonials__img-slider
   .splide__track
     overflow: visible !important
-    
+
+.pricing__toggle
+  --toggle-width 70px
+  --toggle-height 36px
+  --toggle-padding 8px
+  --toggle-stroke-width 1px
+  --toggle-stroke-color black  
+  --toggle-stroke-color-active transparent  
+  --toggle-bg-color none
+  --toggle-bg-color-active var(--bg-prime-col)
+  --toggle-dot-color black
+  --toggle-dot-color-active white
+  --toggle-radius calc(var(--toggle-height) - var(--toggle-padding) * 2)
 .pricing__switch {
-  display: inline-block;
-  height: 34px;
   position: relative;
-  width: 60px;
+  display: inline-block;
+  height: var(--toggle-height);
+  width: var(--toggle-width);
 }
 
 .pricing__switch input {
   display:none;
 }
 
-.pricing__switch_bg {
-  background-color: #ccc;
-  bottom: 0;
-  cursor: pointer;
-  left: 0;
+.pricing__switch__bg {
   position: absolute;
-  right: 0;
-  top: 0;
-  transition: .4s;
+  inset: 0;
+  cursor: pointer;
+  background-color: var(--toggle-bg-color)
+  outline var(--toggle-stroke-width) solid var(--toggle-stroke-color)
+  outline-offset: calc( var(--toggle-stroke-width) * -1)
+  transition: all 800ms var(--ease-out-expo);
 }
 
 .pricing__switch__bg::before {
-  background-color: #fff;
-  bottom: 4px;
   content: "";
-  height: 26px;
-  left: 4px;
   position: absolute;
-  transition: .4s;
-  width: 26px;
+  background-color: var(--toggle-dot-color);
+  bottom: var(--toggle-padding);
+  left: var(--toggle-padding);
+  height: var(--toggle-radius);
+  transition: all 800ms var(--ease-out-expo);
+  width: var(--toggle-radius); 
 }
 
 .pricing__switch__input:checked + .pricing__switch__bg {
-  background-color: #66bb6a;
+  background-color: var(--toggle-bg-color-active) 
+  outline-color: var(--toggle-stroke-color-active)
 }
 
 .pricing__switch__input:checked + .pricing__switch__bg:before {
-  transform: translateX(26px);
+  background-color var(--toggle-dot-color-active)
+  transform: translateX(calc(var(--toggle-width) - var(--toggle-padding) * 2 - var(--toggle-radius)));
 }
 
-.pricing__switch__bg {
-  border-radius: 34px;
-}
-
-.pricing__switch__bg::before {
-  border-radius: 50%;
+.pricing__switch__bg, .pricing__switch__bg::before {
+  border-radius: 99rem;
 }
 
 

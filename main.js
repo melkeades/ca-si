@@ -73,6 +73,10 @@ function home() {
   sel('.pricing__toggle-wrap').addEventListener('click', (e) => {
     sel('#pricing').checked ^= 1
   })
+  sel('#pricing').addEventListener('change', (e) => {
+    sel('.pricing__toggle-wrap').click()
+    sel('#pricing').checked ^= 1
+  })
   mq.add('(max-width: 991px)', () => {})
   console.log('sf')
 }
