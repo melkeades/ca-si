@@ -30,63 +30,19 @@ html.lenis
   .splide__track
     overflow: visible !important
 
-.pricing__toggle
-  --toggle-width 70px
-  --toggle-height 36px
-  --toggle-padding 8px
-  --toggle-stroke-width 1px
-  --toggle-stroke-color black  
-  --toggle-stroke-color-active transparent  
-  --toggle-bg-color none
-  --toggle-bg-color-active var(--bg-prime-col)
-  --toggle-dot-color black
-  --toggle-dot-color-active white
-  --toggle-radius calc(var(--toggle-height) - var(--toggle-padding) * 2)
-.pricing__switch {
-  position: relative;
-  display: inline-block;
-  height: var(--toggle-height);
-  width: var(--toggle-width);
-}
-
-.pricing__switch input {
-  display:none;
-}
-
-.pricing__switch__bg {
-  position: absolute;
-  inset: 0;
-  cursor: pointer;
-  background-color: var(--toggle-bg-color)
-  outline var(--toggle-stroke-width) solid var(--toggle-stroke-color)
-  outline-offset: calc( var(--toggle-stroke-width) * -1)
-  transition: all 800ms var(--ease-out-expo);
-}
-
-.pricing__switch__bg::before {
-  content: "";
-  position: absolute;
-  background-color: var(--toggle-dot-color);
-  bottom: var(--toggle-padding);
-  left: var(--toggle-padding);
-  height: var(--toggle-radius);
-  transition: all 800ms var(--ease-out-expo);
-  width: var(--toggle-radius); 
-}
-
-.pricing__switch__input:checked + .pricing__switch__bg {
-  background-color: var(--toggle-bg-color-active) 
-  outline-color: var(--toggle-stroke-color-active)
-}
-
-.pricing__switch__input:checked + .pricing__switch__bg:before {
-  background-color var(--toggle-dot-color-active)
-  transform: translateX(calc(var(--toggle-width) - var(--toggle-padding) * 2 - var(--toggle-radius)));
-}
-
-.pricing__switch__bg, .pricing__switch__bg::before {
-  border-radius: 99rem;
-}
+.tabs__pane__tabs
+  --tabs-line-top 0px
+  --tabs-line-height 0px
+  &::before
+    content ''
+    position absolute
+    left 0
+    top var(--tabs-line-top)
+    height var(--tabs-line-height)
+    width 5px
+    background var(--prime-col)
+    border-radius: 99rem
+    translate:  -50% 0
 
 
 /*
@@ -105,3 +61,6 @@ html.lenis
 */
 
 /*------------------------------*/
+#cta-lines2-c-clone
+  --length 0
+  --offset 0  

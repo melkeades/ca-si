@@ -1,12 +1,13 @@
 import './style.styl'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
+import MotionPathPlugin from 'gsap/MotionPathPlugin'
 import Lenis from '@studio-freight/lenis'
 import Splide from '@splidejs/splide'
 import '@splidejs/splide/css'
 import { AutoScroll } from '@splidejs/splide-extension-auto-scroll'
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger, MotionPathPlugin)
 const mq = gsap.matchMedia()
 const mqd = 1440
 const mqt = 991
@@ -47,29 +48,116 @@ ScrollTrigger.create({
   start: vh(100) + ' top',
   toggleActions: 'play none none reverse',
 })
-devMode(0)
+devMode(1)
 function home() {
   mq.add('(min-width: 992px)', () => {
+    // animate props slide in
+    ScrollTrigger.create({
+      animation: gsap.from([...selAll('.props__col')], { y: 50, opacity: 0, duration: 2, ease: 'expo.out', stagger: 0.25 }),
+      trigger: '.props',
+      start: 'top 75%',
+    })
+    // fix tabs changing width due to the text weight change
     selAll('.tabs__tab').forEach((tab) => {
       const width = tab.getBoundingClientRect().width
       tab.style.width = width + 'px'
     })
   })
-  stInit(-50, 'hero__video', 'hero')
-  stInit(150, 'hero__bg__lines', 'hero')
-  stInit(250, 'hero__bg__circles', 'hero')
-  stInit(-50, 'tabs__img-shadow', 'tabs-wrap')
-  stInit(-100, 'laptop-wrap', 'tabs-wrap')
-  stInit(-50, 'laptop__video-wrap', 'tabs-wrap')
-  stInit(-80, 'laptop__dots', 'tabs-wrap')
-  stInit(100, 'ricing__featured-bg__lines', 'pricing__featured-bg')
-  stInit(250, 'pricing__featured-bg__dots', 'pricing__featured-bg')
-  stInit(100, 'footer__bg__lines-1', 'cta__bg')
-  stInit(80, 'footer__bg__lines-2', 'cta__bg')
-  stInit(150, 'footer__bg__dots-1', 'cta__bg')
-  stInit(150, 'footer__bg__dots-2', 'cta__bg')
+
+  // Set and animate tabs sidebar
+  const tabs_ = '.tabs'
+  const panes = selAll(tabs_ + '.w-tabs>.w-tab-content>.w-tab-pane')
+  const paneCurrent$ = sel(tabs_ + '.w-tabs>.w-tab-content>.w-tab-pane.w--tab-active')
+  tabInit(paneCurrent$)
+  // listener doesn't wait for the class update, observer used instead
+  const observer = new MutationObserver(function (event) {
+    tabInit(event[1].target)
+  })
+  ;[...panes].forEach((tab) => {
+    observer.observe(tab, {
+      attributes: true,
+      attributeFilter: ['class'],
+      childList: false,
+      characterData: false,
+    })
+  })
+  function tabInit(paneCurrent) {
+    const paneCurrent$ = paneCurrent
+    let newPaneTabActive$ = paneCurrent$.querySelector('.w-tab-link.w--current')
+
+    const paneTabs$ = paneCurrent$.querySelector('.w-tab-menu')
+    paneTabs$.style.setProperty('--tabs-line-height', newPaneTabActive$.offsetHeight + 'px')
+    paneTabs$.style.setProperty('--tabs-line-top', newPaneTabActive$.offsetTop + 'px')
+
+    paneTabs$.addEventListener('click', function (e) {
+      newPaneTabActive$ = e.target.closest('[role="tab"]')
+      if (!newPaneTabActive$ || newPaneTabActive$ === paneCurrent$) return
+
+      gsap.to(this, {
+        '--tabs-line-height': newPaneTabActive$.offsetHeight,
+        '--tabs-line-top': newPaneTabActive$.offsetTop,
+        duration: 0.8,
+        ease: 'expo.out',
+      })
+    })
+  }
+
+  // parallax
+  scrollTriggerInit(-50, 'hero__video', 'hero')
+  scrollTriggerInit(150, 'hero__bg__lines', 'hero')
+  scrollTriggerInit(250, 'hero__bg__circles', 'hero')
+  scrollTriggerInit(-50, 'tabs__img-shadow', 'tabs-wrap')
+  scrollTriggerInit(-100, 'laptop-wrap', 'tabs-wrap')
+  scrollTriggerInit(-50, 'laptop__video-wrap', 'tabs-wrap')
+  scrollTriggerInit(-80, 'laptop__dots', 'tabs-wrap')
+  scrollTriggerInit(100, 'ricing__featured-bg__lines', 'pricing__featured-bg')
+  scrollTriggerInit(250, 'pricing__featured-bg__dots', 'pricing__featured-bg')
+  scrollTriggerInit(100, 'footer__bg__lines-1', 'cta__bg')
+  scrollTriggerInit(80, 'footer__bg__lines-2', 'cta__bg')
+  scrollTriggerInit(150, 'footer__bg__dots-1', 'cta__bg')
+  scrollTriggerInit(150, 'footer__bg__dots-2', 'cta__bg')
+
+  // paths stroke cloning and animation
+  ;['hero-lines-a', 'hero-lines-b', 'hero-lines-c', 'cta-lines1-a', 'cta-lines1-b', 'cta-lines2-a', 'cta-lines2-b', 'cta-lines2-c'].forEach((el) => {
+    const el$ = sel('#' + el)
+    const pathClone = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+    pathClone.setAttribute('id', el + '-clone')
+    pathClone.setAttribute('stroke', 'white')
+    pathClone.setAttribute('stroke-width', '30')
+    pathClone.setAttribute('stroke-linecap', 'round')
+    pathClone.setAttribute('d', el$.getAttribute('d'))
+    el$.after(pathClone)
+    pathTlInit(pathClone)
+  })
+  const p = sel('#cta-lines2-c-clone')
+
+  // to randomize the duration of the animation, might be added natively in gsap v3.4
+  function pathTlInit(el) {
+    const length = el.getTotalLength()
+    gsap.fromTo(
+      el,
+      {
+        opacity: gsap.utils.random(0, 0.8),
+        strokeDashoffset: length / 10, // where it starts
+        strokeDasharray: length / 10 + ' ' + length, // how long it is + how long the gap
+      },
+      {
+        opacity: 0,
+        duration: gsap.utils.random(1.5, 4),
+        delay: gsap.utils.random(1, 10),
+        strokeDashoffset: length,
+        strokeDasharray: 1 + ' ' + length,
+        onComplete: pathTlInit,
+        onCompleteParams: [el],
+      }
+    )
+  }
+
+  // sliders
   logosSliderInit()
   testSliderInit()
+
+  // pricing toggle
   sel('.pricing__toggle-wrap').addEventListener('click', (e) => {
     sel('#pricing').checked ^= 1
   })
@@ -77,8 +165,8 @@ function home() {
     sel('.pricing__toggle-wrap').click()
     sel('#pricing').checked ^= 1
   })
+
   mq.add('(max-width: 991px)', () => {})
-  console.log('sf')
 }
 function terms() {}
 
@@ -146,12 +234,14 @@ function testSliderInit() {
     type: 'loop',
     perPage: 1,
     speed: 1500,
+    autoplay: true,
+    interval: 5000,
     easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
   })
 
   const testImgSlider = new Splide(`.${name}__img-slider`, {
     type: 'fade',
-    rewind: true,
+    rewind: true, // to make it "loop" with the type fade
     arrows: false,
     pagination: false,
     perPage: 1,
@@ -160,15 +250,15 @@ function testSliderInit() {
   testImgSlider.sync(testSlider)
   testSlider.mount()
   testImgSlider.mount()
-
+  // add arrows
   sel(`.${name}__arrows-wrap .arrow--left`).addEventListener('click', (e) => {
     testSlider.go('-1')
   })
   sel(`.${name}__arrows-wrap .arrow:not(.arrow--left)`).addEventListener('click', (e) => {
     testSlider.go('+1')
   })
+  // parse bullets inside the container and repopulate
   const pagination$ = sel(`.${name}__pagination`)
-
   let bulletPressed = false
   if (testSlider.length > 1) {
     const bullet$ = sel(`.${name}__pagination .bullet:not(.bullet--active)`)
@@ -186,7 +276,7 @@ function testSliderInit() {
   } else {
     pagination$.replaceChildren()
   }
-  const comp = testSlider.Components
+  // animate parts of the slides
   let slideMetaTl
   const length = testSlider.length - 1
   testSlider.on('move', function (newIndex, oldIndex) {
@@ -200,13 +290,13 @@ function testSliderInit() {
       toRight = (newIndex > oldIndex && !(oldIndex === 0 && newIndex === length)) || (newIndex === 0 && oldIndex === length)
     }
     const newActiveSlide$ = testSlider.Components.Elements.slides[newIndex]
-    const newActiveMeta$ = newActiveSlide$.querySelectorAll('.testimonials__meta>div')
+    const newActiveMeta$a = newActiveSlide$.querySelectorAll('.testimonials__meta>div')
     const oldActiveSlide$ = testSlider.Components.Elements.slides[oldIndex]
     const direction = toRight ? 1 : -1
     gsap.fromTo(newActiveSlide$, { opacity: 0 }, { opacity: 1, duration: 1 })
     if (slideMetaTl?.isActive) slideMetaTl.kill()
     slideMetaTl = gsap.fromTo(
-      [...newActiveMeta$],
+      [...newActiveMeta$a],
       { opacity: 0, x: 50 * direction },
       { opacity: 1, x: 0, duration: 4, stagger: { amount: 0.3 }, ease: 'expo.out' }
     )
@@ -214,8 +304,6 @@ function testSliderInit() {
   })
 }
 function removeSplideClasses(slider) {
-  console.log('re')
-
   const splide = document.querySelector('.' + slider)
   const track = splide.querySelector('.splide__track')
   const list = splide.querySelector('.splide__list')
@@ -279,7 +367,7 @@ window.addEventListener(
   })
 )
 
-function stInit(distance = 0, elClassName = '', sectionClassName = '') {
+function scrollTriggerInit(distance = 0, elClassName = '', sectionClassName = '') {
   sectionClassName = sectionClassName || elClassName
   return ScrollTrigger.create({
     animation: gsap.fromTo('.' + elClassName, { y: -distance }, { y: distance, ease: 'none' }),
