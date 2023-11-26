@@ -1,8 +1,13 @@
-:root
-  --ease-out-expo cubic-bezier(0.16, 1, 0.3, 1)
-
-[slider-cut] .splide__slide  
+[slider-cut] .w-dyn-item
   display block !important
+
+.navbar-sticky
+  background rgba(255,255,255,.8)
+  backdrop-filter: blur(30px)
+  box-shadow: 0 5px 15px 0 rgba(19,0,87,.05)
+  z-index 500
+  .navbar
+    padding .75rem 2rem !important
 
 html.lenis
   height auto
@@ -43,24 +48,33 @@ html.lenis
     background var(--prime-col)
     border-radius: 99rem
     translate:  -50% 0
-
-
-/*
-.tabs__tab:not(:last-of-type):not(.w--current)::after
-  content ''
+    
+.tabs__tabs::after
   position absolute
-  right 0
-  top 30%
-  width 1px
-  height 100%
-  background-color rgba(0, 0, 0, .15)
-  transition all 300ms
+  content ''
+  left 0
+  bottom -2rem
+  height 2rem
+  width 100%
+  background white
+.tabs__panes
+  background-color rgba(255,255,255,0) !important
 
-.tabs__tab:has(+ .w--current)::after, .tabs__tab:hover::after, .tabs__tab:has(+ :hover)::after
-  background-color rgba(0, 0, 0, 0) !important
-*/
+.tabs__img-shadow-mask
+  transition height 1s var(--ease-expo-out)
+.tabs 
+  --tabs-menu-height 0
+  transition height 1s var(--ease-expo-out)
+  
+  &::before
+    content: ''
+    display block
+    position absolute
+    inset var(--tabs-menu-height) 0 0 0
+    background white
+    border-radius: var(--r-2)
+    filter drop-shadow(0px 100px 50px rgba(43, 62, 144, 0.05))
 
+
+  
 /*------------------------------*/
-#cta-lines2-c-clone
-  --length 0
-  --offset 0  

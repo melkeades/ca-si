@@ -16,8 +16,8 @@ const mqm = 478
 
 const sel = (e) => document.querySelector(e)
 const selAll = (e) => document.querySelectorAll(e)
-const vh = (e) => window.innerHeight * (e / 100)
-const vw = (e) => window.innerWidth * (e / 100)
+const vh = (percent) => window.innerHeight * (percent / 100)
+const vw = (percent) => window.innerWidth * (percent / 100)
 
 const lenis = new Lenis()
 function raf(time) {
@@ -42,66 +42,22 @@ switch (sel('.page-wrapper').getAttribute('data-page')) {
   default:
     console.log('unknown data-page')
 }
+const navbarTl = gsap.to('.navbar-sticky', {
+  keyframes: { '0%': { opacity: 0 }, '30%': { opacity: 1 }, '100%': { opacity: 1 } },
+  yPercent: 100,
+  ease: 'linear',
+  paused: true,
+})
 ScrollTrigger.create({
-  animation: gsap.timeline().to('.navbar-sticky-wrap', { y: 0, opacity: 1 }, 0),
   trigger: 'body',
   start: vh(100) + ' top',
-  toggleActions: 'play none none reverse',
+  onToggle({ direction, getVelocity }) {
+    // to reverse the easing
+    gsap.to(navbarTl, { duration: 1.5, progress: direction === 1 ? 1 : 0, ease: 'expo.out' })
+  },
 })
 devMode(1)
 function home() {
-  mq.add('(min-width: 992px)', () => {
-    // animate props slide in
-    ScrollTrigger.create({
-      animation: gsap.from([...selAll('.props__col')], { y: 50, opacity: 0, duration: 2, ease: 'expo.out', stagger: 0.25 }),
-      trigger: '.props',
-      start: 'top 75%',
-    })
-    // fix tabs changing width due to the text weight change
-    selAll('.tabs__tab').forEach((tab) => {
-      const width = tab.getBoundingClientRect().width
-      tab.style.width = width + 'px'
-    })
-  })
-
-  // Set and animate tabs sidebar
-  const tabs_ = '.tabs'
-  const panes = selAll(tabs_ + '.w-tabs>.w-tab-content>.w-tab-pane')
-  const paneCurrent$ = sel(tabs_ + '.w-tabs>.w-tab-content>.w-tab-pane.w--tab-active')
-  tabInit(paneCurrent$)
-  // listener doesn't wait for the class update, observer used instead
-  const observer = new MutationObserver(function (event) {
-    tabInit(event[1].target)
-  })
-  ;[...panes].forEach((tab) => {
-    observer.observe(tab, {
-      attributes: true,
-      attributeFilter: ['class'],
-      childList: false,
-      characterData: false,
-    })
-  })
-  function tabInit(paneCurrent) {
-    const paneCurrent$ = paneCurrent
-    let newPaneTabActive$ = paneCurrent$.querySelector('.w-tab-link.w--current')
-
-    const paneTabs$ = paneCurrent$.querySelector('.w-tab-menu')
-    paneTabs$.style.setProperty('--tabs-line-height', newPaneTabActive$.offsetHeight + 'px')
-    paneTabs$.style.setProperty('--tabs-line-top', newPaneTabActive$.offsetTop + 'px')
-
-    paneTabs$.addEventListener('click', function (e) {
-      newPaneTabActive$ = e.target.closest('[role="tab"]')
-      if (!newPaneTabActive$ || newPaneTabActive$ === paneCurrent$) return
-
-      gsap.to(this, {
-        '--tabs-line-height': newPaneTabActive$.offsetHeight,
-        '--tabs-line-top': newPaneTabActive$.offsetTop,
-        duration: 0.8,
-        ease: 'expo.out',
-      })
-    })
-  }
-
   // parallax
   scrollTriggerInit(-50, 'hero__video', 'hero')
   scrollTriggerInit(150, 'hero__bg__lines', 'hero')
@@ -117,7 +73,7 @@ function home() {
   scrollTriggerInit(150, 'footer__bg__dots-1', 'cta__bg')
   scrollTriggerInit(150, 'footer__bg__dots-2', 'cta__bg')
 
-  // paths stroke cloning and animation
+  // svg paths stroke cloning and animating
   ;['hero-lines-a', 'hero-lines-b', 'hero-lines-c', 'cta-lines1-a', 'cta-lines1-b', 'cta-lines2-a', 'cta-lines2-b', 'cta-lines2-c'].forEach((el) => {
     const el$ = sel('#' + el)
     const pathClone = document.createElementNS('http://www.w3.org/2000/svg', 'path')
@@ -125,29 +81,30 @@ function home() {
     pathClone.setAttribute('stroke', 'white')
     pathClone.setAttribute('stroke-width', '30')
     pathClone.setAttribute('stroke-linecap', 'round')
+    pathClone.setAttribute('style', 'mix-blend-mode: soft-light')
     pathClone.setAttribute('d', el$.getAttribute('d'))
     el$.after(pathClone)
-    pathTlInit(pathClone)
+    svgPathTlInit(pathClone)
   })
-  const p = sel('#cta-lines2-c-clone')
 
-  // to randomize the duration of the animation, might be added natively in gsap v3.4
-  function pathTlInit(el) {
+  // to randomize the duration of the animation (might be added natively in gsap v3.4)
+  function svgPathTlInit(el) {
     const length = el.getTotalLength()
     gsap.fromTo(
       el,
       {
-        opacity: gsap.utils.random(0, 0.8),
-        strokeDashoffset: length / 10, // where it starts
+        opacity: gsap.utils.random(1, 0.8),
+        strokeDashoffset: length / 6, // where it starts
         strokeDasharray: length / 10 + ' ' + length, // how long it is + how long the gap
       },
       {
         opacity: 0,
-        duration: gsap.utils.random(1.5, 4),
-        delay: gsap.utils.random(1, 10),
+        ease: 'expo.out',
+        duration: gsap.utils.random(2, 6),
+        delay: gsap.utils.random(1, 5),
         strokeDashoffset: length,
         strokeDasharray: 1 + ' ' + length,
-        onComplete: pathTlInit,
+        onComplete: svgPathTlInit, // check gsap v3.4 when it arrives
         onCompleteParams: [el],
       }
     )
@@ -158,12 +115,81 @@ function home() {
   testSliderInit()
 
   // pricing toggle
+  const pricingToggle$ = sel('#pricing')
   sel('.pricing__toggle-wrap').addEventListener('click', (e) => {
-    sel('#pricing').checked ^= 1
+    pricingToggle$.checked ^= 1
   })
   sel('#pricing').addEventListener('change', (e) => {
     sel('.pricing__toggle-wrap').click()
-    sel('#pricing').checked ^= 1
+    pricingToggle$.checked ^= 1
+  })
+
+  // Media query dependant stuff
+  mq.add('(min-width: 992px)', () => {
+    // animate props slide in
+    ScrollTrigger.create({
+      animation: gsap.from([...selAll('.props__col')], { y: 50, opacity: 0, duration: 2, ease: 'expo.out', stagger: 0.25 }),
+      trigger: '.props',
+      start: 'top 75%',
+    })
+    // TABS
+    // fix tabs changing width due to the text weight change
+    selAll('.tabs__tab').forEach((tab) => {
+      const width = tab.getBoundingClientRect().width
+      tab.style.width = width + 'px'
+    })
+    // Set and animate tabs side "underline"
+    const tabs_ = '.tabs'
+    const tabsPanes$ = sel('.tabs__panes')
+    const styles = window.getComputedStyle(tabsPanes$)
+    const paneHeight = parseInt(styles.paddingTop) + parseInt(styles.paddingBottom) + tabsPanes$.getBoundingClientRect().height
+
+    const panes = selAll(tabs_ + '.w-tabs>.w-tab-content>.w-tab-pane')
+    let paneCurrent$ = sel(tabs_ + '.w-tabs>.w-tab-content>.w-tab-pane.w--tab-active')
+    tabInit(paneCurrent$)
+    // listener doesn't wait for the class update, observer used instead
+    const observer = new MutationObserver(function (event) {
+      tabInit(event[1].target)
+    })
+    ;[...panes].forEach((tab) => {
+      observer.observe(tab, {
+        attributes: true,
+        attributeFilter: ['class'],
+        childList: false,
+        characterData: false,
+      })
+    })
+
+    function tabInit(paneCurrent) {
+      paneCurrent$ = paneCurrent
+      let newPaneTabActive$ = paneCurrent$.querySelector('.w-tab-link.w--current')
+      const paneTabs$ = paneCurrent$.querySelector('.w-tab-menu')
+      paneTabs$.style.setProperty('--tabs-line-height', newPaneTabActive$.offsetHeight + 'px')
+      paneTabs$.style.setProperty('--tabs-line-top', newPaneTabActive$.offsetTop + 'px')
+
+      paneTabs$.addEventListener('click', function (e) {
+        newPaneTabActive$ = e.target.closest('[role="tab"]')
+        if (!newPaneTabActive$ || newPaneTabActive$ === paneCurrent$) return
+
+        gsap.to(this, {
+          '--tabs-line-height': newPaneTabActive$.offsetHeight,
+          '--tabs-line-top': newPaneTabActive$.offsetTop,
+          duration: 0.8,
+          ease: 'expo.out',
+        })
+      })
+    }
+    // animate the changing height between the tabs panes
+    const tabsMenuHeight = sel(tabs_ + '.w-tabs>.w-tab-menu').getBoundingClientRect().height
+    const tabs$ = sel(tabs_)
+    tabs$.style.setProperty('--tabs-menu-height', tabsMenuHeight + 'px')
+    new ResizeObserver((el) => {
+      const height = el[0].target.getBoundingClientRect().height
+      tabs$.style.setProperty('height', height + tabsMenuHeight + 'px')
+      // if the shadow masking div is present animate it too
+      const mask = paneCurrent$.querySelector('.tabs__img-shadow-mask')
+      mask?.style.setProperty('height', height + 'px')
+    }).observe(tabsPanes$)
   })
 
   mq.add('(max-width: 991px)', () => {})
