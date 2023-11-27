@@ -56,7 +56,7 @@ ScrollTrigger.create({
     gsap.to(navbarTl, { duration: 1.5, progress: direction === 1 ? 1 : 0, ease: 'expo.out' })
   },
 })
-devMode(1)
+devMode(0)
 function home() {
   // parallax
   scrollTriggerInit(-50, 'hero__video', 'hero')
