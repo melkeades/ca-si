@@ -76,7 +76,6 @@ mq.add('(max-width: 767px)', () => {
 devMode(0)
 function home() {
   // sliders
-  logosSliderInit()
   testSliderInit()
 
   // pricing toggle
@@ -96,6 +95,9 @@ function home() {
 
   // Media query dependant stuff
   mq.add('(min-width: 992px)', () => {
+    addSplideClasses('logos__slider')
+    logosSliderInit()
+
     // parallax
     scrollTriggerInit(-50, 'hero__video', 'hero')
     scrollTriggerInit(150, 'hero__bg__lines', 'hero')
@@ -217,6 +219,8 @@ function home() {
 
   mq.add('(max-width: 991px)', () => {})
   mq.add('(max-width: 767px)', () => {
+    removeSplideClasses('logos__slider')
+
     selAll('[data-video-urls]').forEach((video) => {
       video.querySelector('video').pause()
       // setTimeout(() => {
