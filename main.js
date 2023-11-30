@@ -216,7 +216,7 @@ function logosSliderInit() {
     gap: '4rem',
     type: 'loop',
     autoWidth: true,
-    autoScroll: { speed: 1, autoStart: false },
+    autoScroll: { speed: 0.6, autoStart: false },
     breakpoints: {
       767: {
         gap: '2rem',
@@ -286,6 +286,11 @@ function testSliderInit() {
         autoplay: true,
       },
       outView: {
+        autoplay: false,
+      },
+    },
+    breakpoints: {
+      747: {
         autoplay: false,
       },
     },
