@@ -43,19 +43,29 @@ switch (sel('.page-wrapper').getAttribute('data-page')) {
   default:
     console.log('unknown data-page')
 }
-const navbarTl = gsap.to('.navbar-sticky', {
-  keyframes: { '0%': { opacity: 0 }, '30%': { opacity: 1 }, '100%': { opacity: 1 } },
-  yPercent: 100,
-  ease: 'linear',
-  paused: true,
+mq.add('(min-width: 991px)', () => {
+  const navbarTl = gsap.to('.navbar-sticky', {
+    keyframes: { '0%': { opacity: 0 }, '30%': { opacity: 1 }, '100%': { opacity: 1 } },
+    yPercent: 100,
+    ease: 'linear',
+    paused: true,
+  })
+  ScrollTrigger.create({
+    trigger: 'body',
+    start: vh(100) + ' top',
+    onToggle({ direction, getVelocity }) {
+      // to reverse the easing
+      gsap.to(navbarTl, { duration: 1.5, progress: direction === 1 ? 1 : 0, ease: 'expo.out' })
+    },
+  })
 })
-ScrollTrigger.create({
-  trigger: 'body',
-  start: vh(100) + ' top',
-  onToggle({ direction, getVelocity }) {
-    // to reverse the easing
-    gsap.to(navbarTl, { duration: 1.5, progress: direction === 1 ? 1 : 0, ease: 'expo.out' })
-  },
+mq.add('(max-width: 767px)', () => {
+  ScrollTrigger.create({
+    animation: gsap.fromTo('.navbar-sticky', { yPercent: -100 }, { yPercent: 100 }),
+    trigger: 'body',
+    start: vh(100) + ' top',
+    toggleActions: 'play none none reverse',
+  })
 })
 devMode(0)
 function home() {
