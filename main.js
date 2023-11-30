@@ -80,10 +80,21 @@ function home() {
   let logosSplide
 
   // pricing toggle
+  const pricingMonthH$ = sel('.pricing__period-monthly__h')
+  const pricingYearH$ = sel('.pricing__period-yearly__h')
   const pricingToggle$ = sel('#pricing')
   sel('.pricing__toggle-wrap').addEventListener('click', (e) => {
     e.preventDefault()
     pricingToggle$.checked ^= 1
+    if (pricingMonthH$) {
+      if (pricingToggle$.checked) {
+        pricingMonthH$.style.fontWeight = 'normal'
+        pricingYearH$.style.fontWeight = 'bold'
+      } else {
+        pricingMonthH$.style.fontWeight = 'bold'
+        pricingYearH$.style.fontWeight = 'normal'
+      }
+    }
     console.log('pi')
   })
   sel('#pricing').addEventListener('change', (e) => {
