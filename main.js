@@ -6,6 +6,7 @@ import Lenis from '@studio-freight/lenis'
 import Splide from '@splidejs/splide'
 import '@splidejs/splide/css'
 import { AutoScroll } from '@splidejs/splide-extension-auto-scroll'
+import { Intersection } from '@splidejs/splide-extension-intersection'
 
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin)
 const mq = gsap.matchMedia()
@@ -65,11 +66,16 @@ function home() {
   // pricing toggle
   const pricingToggle$ = sel('#pricing')
   sel('.pricing__toggle-wrap').addEventListener('click', (e) => {
+    e.preventDefault()
     pricingToggle$.checked ^= 1
+    console.log('pi')
   })
   sel('#pricing').addEventListener('change', (e) => {
+    e.preventDefault()
     sel('.pricing__toggle-wrap').click()
     pricingToggle$.checked ^= 1
+    console.log(e.target)
+    // console.log('toggle')
   })
 
   // TABS
@@ -259,19 +265,28 @@ function logosSliderInit() {
 }
 function testSliderInit() {
   const name = 'testimonials'
-  const testSlider = new Splide(`.${name}__slider`, {
+  const testSlider$ = sel(`.${name}__slider`)
+  const testSlider = new Splide(testSlider$, {
     arrows: false,
     pagination: false,
     gap: '2rem',
     type: 'loop',
     perPage: 1,
     speed: 1500,
-    autoplay: true,
     interval: 5000,
     easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+    autoplay: 'pause',
+    intersection: {
+      inView: {
+        autoplay: true,
+      },
+      outView: {
+        autoplay: false,
+      },
+    },
   })
-
-  const testImgSlider = new Splide(`.${name}__img-slider`, {
+  const testImgSlider$ = sel(`.${name}__img-slider`)
+  const testImgSlider = new Splide(testImgSlider$, {
     type: 'fade',
     rewind: true, // to make it "loop" with the type fade
     arrows: false,
@@ -280,7 +295,7 @@ function testSliderInit() {
     speed: 1000,
   })
   testImgSlider.sync(testSlider)
-  testSlider.mount()
+  testSlider.mount({ Intersection })
   testImgSlider.mount()
   // add arrows
   sel(`.${name}__arrows-wrap .arrow--left`).addEventListener('click', (e) => {
@@ -308,12 +323,34 @@ function testSliderInit() {
   } else {
     pagination$.replaceChildren()
   }
+  //  if swiping get the slide index and pause the slider
+  let swiped = false
+  let sliderIndexOld = 0
+  ;[testSlider$, testImgSlider$].forEach((slider) => {
+    slider.addEventListener('pointerdown', function (e) {
+      sliderIndexOld = testSlider.index
+      testSlider.Components.Autoplay.pause()
+    })
+    slider.addEventListener('pointerup', function (e) {
+      swiped = true
+      testSlider.Components.Autoplay.play()
+    })
+  })
+
   // animate parts of the slides
   let slideMetaTl
   const length = testSlider.length - 1
+  // fires on a possible index update NOT 'move'
   testSlider.on('move', function (newIndex, oldIndex) {
+    // abort if the new index = index on swipe end ('oldIndex' != 'newIndex' always)
+    if (swiped && newIndex === sliderIndexOld) {
+      swiped = false
+      return
+    }
+    // update bullets
     sel(`.${name}__pagination .bullet--active`).classList.remove('bullet--active')
     sel(`.${name}__pagination .bullet:nth-of-type(${testSlider.index + 1})`).classList.add('bullet--active')
+    // assess the direction of the movement
     let toRight = false
     if (bulletPressed) {
       toRight = newIndex > oldIndex
@@ -322,8 +359,9 @@ function testSliderInit() {
       toRight = (newIndex > oldIndex && !(oldIndex === 0 && newIndex === length)) || (newIndex === 0 && oldIndex === length)
     }
     const newActiveSlide$ = testSlider.Components.Elements.slides[newIndex]
-    const newActiveMeta$a = newActiveSlide$.querySelectorAll('.testimonials__meta>div')
     const oldActiveSlide$ = testSlider.Components.Elements.slides[oldIndex]
+
+    const newActiveMeta$a = newActiveSlide$.querySelectorAll('.testimonials__meta>div')
     const direction = toRight ? 1 : -1
     gsap.fromTo(newActiveSlide$, { opacity: 0 }, { opacity: 1, duration: 1 })
     if (slideMetaTl?.isActive) slideMetaTl.kill()
