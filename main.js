@@ -77,6 +77,7 @@ devMode(0)
 function home() {
   // sliders
   testSliderInit()
+  let logosSplide
 
   // pricing toggle
   const pricingToggle$ = sel('#pricing')
@@ -96,7 +97,7 @@ function home() {
   // Media query dependant stuff
   mq.add('(min-width: 992px)', () => {
     addSplideClasses('logos__slider')
-    logosSliderInit()
+    logosSplide = logosSliderInit()
 
     // parallax
     scrollTriggerInit(-50, 'hero__video', 'hero')
@@ -219,7 +220,9 @@ function home() {
 
   mq.add('(max-width: 991px)', () => {})
   mq.add('(max-width: 767px)', () => {
-    removeSplideClasses('logos__slider')
+    if (logosSplide) {
+      removeSplideClasses('logos__slider')
+    }
 
     selAll('[data-video-urls]').forEach((video) => {
       video.querySelector('video').pause()
@@ -289,6 +292,7 @@ function logosSliderInit() {
     }
   }
   logosSlider.mount({ AutoScroll })
+  return logosSlider
 }
 function testSliderInit() {
   const name = 'testimonials'
