@@ -63,7 +63,7 @@ mq.add('(max-width: 767px)', () => {
   ScrollTrigger.create({
     animation: gsap.fromTo('.navbar-sticky', { yPercent: -100 }, { yPercent: 100 }),
     trigger: 'body',
-    start: vh(100) + ' top',
+    start: vh(200) + ' top',
     toggleActions: 'play none none reverse',
   })
   // ScrollTrigger.create({
