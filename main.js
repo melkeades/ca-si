@@ -202,7 +202,9 @@ function home() {
   mq.add('(max-width: 991px)', () => {})
   mq.add('(max-width: 767px)', () => {
     selAll('[data-video-urls]').forEach((video) => {
-      video.querySelector('video').pause()
+      setTimeout(() => {
+        video.querySelector('video').pause()
+      }, 260)
     })
   })
 }
