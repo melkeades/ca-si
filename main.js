@@ -8,6 +8,7 @@ import '@splidejs/splide/css'
 import { AutoScroll } from '@splidejs/splide-extension-auto-scroll'
 import { Intersection } from '@splidejs/splide-extension-intersection'
 
+const vh = (percent) => window.innerHeight * (percent / 100)
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin)
 ScrollTrigger.create({
   animation: gsap.to('.navbar-sticky', { y: 0, opacity: 1 }, 0),
