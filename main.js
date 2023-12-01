@@ -60,12 +60,12 @@ mq.add('(min-width: 991px)', () => {
   })
 })
 mq.add('(max-width: 767px)', () => {
-  ScrollTrigger.create({
-    animation: gsap.to('.navbar-sticky', { y: 0, opacity: 1 }, 0),
-    trigger: 'body',
-    start: vh(200) + ' top',
-    toggleActions: 'play none none reverse',
-  })
+  // ScrollTrigger.create({
+  //   animation: gsap.to('.navbar-sticky', { y: 0, opacity: 1 }, 0),
+  //   trigger: 'body',
+  //   start: vh(200) + ' top',
+  //   toggleActions: 'play none none reverse',
+  // })
 })
 devMode(0)
 function home() {
