@@ -1,0 +1,96 @@
+[slider-cut] .w-dyn-item
+  display block !important
+
+.navbar-sticky
+  background rgba(255,255,255,.8)
+  backdrop-filter: blur(30px)
+  box-shadow: 0 5px 15px 0 rgba(19,0,87,.05)
+  z-index 500
+  @media screen and (max-width: 747px)
+    background white
+    backdrop-filter: unset !important
+  .navbar
+    padding .75rem 2rem !important
+
+html.lenis
+  height auto
+
+.lenis.lenis-smooth
+  scroll-behavior auto
+
+.lenis.lenis-smooth [data-lenis-prevent]
+  overscroll-behavior contain
+
+.lenis.lenis-stopped
+  overflow hidden
+
+.lenis.lenis-scrolling iframe
+  pointer-events none
+
+.splide.is-initialized:not(.is-active) .splide__list
+  display flex !important
+  gap 2rem
+
+.arrow, .round-arrow
+  user-select none
+
+.testimonials__img-slider
+  .splide__track
+    overflow: visible !important
+
+.tabs__pane__tabs
+  --tabs-line-top 0px
+  --tabs-line-height 0px
+  &::before
+    content ''
+    position absolute
+    left 0
+    top var(--tabs-line-top)
+    height var(--tabs-line-height)
+    width 5px
+    background var(--prime-col)
+    border-radius: 99rem
+    translate:  -50% 0
+@media screen and (max-width: 991px)
+  .tabs__tab    
+    width auto !important
+  .tabs__tabs::after
+    display none
+.tabs__tabs::after
+  position absolute
+  content ''
+  left 0
+  bottom -2rem
+  height 2rem
+  width 100%
+  background white
+.tabs__panes
+  background-color rgba(255,255,255,0) !important
+
+.tabs__img-shadow-mask
+  transition height 1s var(--ease-expo-out)
+.tabs 
+  --tabs-menu-height 0
+  transition height 1s var(--ease-expo-out)
+  
+  &::before
+    content: ''
+    display block
+    position absolute
+    inset var(--tabs-menu-height) 0 0 0
+    background white
+    border-radius: var(--r-2)
+    filter drop-shadow(0px 100px 50px rgba(43, 62, 144, 0.05))
+    @media(max-width: 991px)
+      border-radius 0 0 1rem 1rem
+
+
+.testimonials__img-slider__list
+  display grid !important
+.testimonials__img-slider__slide  
+  grid-column-start 1 !important
+  grid-column-end 1 !important
+  grid-row-start: 1 !important
+  grid-row-end: 1!important
+  transform: translateX(0) !important
+/*------------------------------*/
