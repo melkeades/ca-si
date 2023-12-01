@@ -1,5 +1,16 @@
-[slider-cut] .splide__slide  
+[slider-cut] .w-dyn-item
   display block !important
+
+.navbar-sticky
+  background rgba(255,255,255,.8)
+  backdrop-filter: blur(30px)
+  box-shadow: 0 5px 15px 0 rgba(19,0,87,.05)
+  z-index 500
+  @media screen and (max-width: 747px)
+    background white
+    backdrop-filter: unset !important
+  .navbar
+    padding .75rem 2rem !important
 
 html.lenis
   height auto
@@ -26,70 +37,60 @@ html.lenis
 .testimonials__img-slider
   .splide__track
     overflow: visible !important
-    
-.pricing__switch {
-  display: inline-block;
-  height: 34px;
-  position: relative;
-  width: 60px;
-}
 
-.pricing__switch input {
-  display:none;
-}
-
-.pricing__switch_bg {
-  background-color: #ccc;
-  bottom: 0;
-  cursor: pointer;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  transition: .4s;
-}
-
-.pricing__switch__bg::before {
-  background-color: #fff;
-  bottom: 4px;
-  content: "";
-  height: 26px;
-  left: 4px;
-  position: absolute;
-  transition: .4s;
-  width: 26px;
-}
-
-.pricing__switch__input:checked + .pricing__switch__bg {
-  background-color: #66bb6a;
-}
-
-.pricing__switch__input:checked + .pricing__switch__bg:before {
-  transform: translateX(26px);
-}
-
-.pricing__switch__bg {
-  border-radius: 34px;
-}
-
-.pricing__switch__bg::before {
-  border-radius: 50%;
-}
-
-
-/*
-.tabs__tab:not(:last-of-type):not(.w--current)::after
-  content ''
+.tabs__pane__tabs
+  --tabs-line-top 0px
+  --tabs-line-height 0px
+  &::before
+    content ''
+    position absolute
+    left 0
+    top var(--tabs-line-top)
+    height var(--tabs-line-height)
+    width 5px
+    background var(--prime-col)
+    border-radius: 99rem
+    translate:  -50% 0
+@media screen and (max-width: 991px)
+  .tabs__tab    
+    width auto !important
+  .tabs__tabs::after
+    display none
+.tabs__tabs::after
   position absolute
-  right 0
-  top 30%
-  width 1px
-  height 100%
-  background-color rgba(0, 0, 0, .15)
-  transition all 300ms
+  content ''
+  left 0
+  bottom -2rem
+  height 2rem
+  width 100%
+  background white
+.tabs__panes
+  background-color rgba(255,255,255,0) !important
 
-.tabs__tab:has(+ .w--current)::after, .tabs__tab:hover::after, .tabs__tab:has(+ :hover)::after
-  background-color rgba(0, 0, 0, 0) !important
-*/
+.tabs__img-shadow-mask
+  transition height 1s var(--ease-expo-out)
+.tabs 
+  --tabs-menu-height 0
+  transition height 1s var(--ease-expo-out)
+  
+  &::before
+    content: ''
+    display block
+    position absolute
+    inset var(--tabs-menu-height) 0 0 0
+    background white
+    border-radius: var(--r-2)
+    filter drop-shadow(0px 100px 50px rgba(43, 62, 144, 0.05))
+    @media(max-width: 991px)
+      border-radius 0 0 1rem 1rem
 
+
+.testimonials__img-slider__list
+  display grid !important
+.testimonials__img-slider__slide  
+  grid-column-start 1 !important
+  grid-column-end 1 !important
+  grid-row-start: 1 !important
+  grid-row-end: 1!important
+  transform: translateX(0) !important
 /*------------------------------*/
