@@ -43,7 +43,7 @@ switch (sel('.page-wrapper').getAttribute('data-page')) {
   default:
     console.log('unknown data-page')
 }
-mq.add('(min-width: 991px)', () => {
+mq.add('(min-width: 768px)', () => {
   const navbarTl = gsap.to('.navbar-sticky', {
     keyframes: { '0%': { opacity: 0 }, '30%': { opacity: 1 }, '100%': { opacity: 1 } },
     yPercent: 100,
@@ -60,13 +60,13 @@ mq.add('(min-width: 991px)', () => {
   })
 })
 mq.add('(max-width: 767px)', () => {
-  ScrollTrigger.create({
-    // animation: gsap.fromTo('.navbar-sticky', { yPercent: -100 }, { yPercent: 100 }),
-    animation: gsap.to('.navbar-sticky', { yPercent: 100, opacity: 1 }, 0),
-    trigger: '.navbar-wrap',
-    start: vh(200) + ' top',
-    toggleActions: 'play none none reverse',
-  })
+  // ScrollTrigger.create({
+  //   // animation: gsap.fromTo('.navbar-sticky', { yPercent: -100 }, { yPercent: 100 }),
+  //   animation: gsap.to('.navbar-sticky', { yPercent: 100, opacity: 1 }, 0),
+  //   trigger: '.navbar-wrap',
+  //   start: vh(200) + ' top',
+  //   toggleActions: 'play none none reverse',
+  // })
 })
 devMode(0)
 function home() {
