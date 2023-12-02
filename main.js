@@ -43,7 +43,19 @@ switch (sel('.page-wrapper').getAttribute('data-page')) {
   default:
     console.log('unknown data-page')
 }
+let mobNavHandler = () => {
+  const position = window.scrollY
+  const navbar$ = sel('.navbar-sticky')
+  if (position > vh(100)) {
+    navbar$.style.translate = '0 100%'
+  } else {
+    navbar$.style.translate = '0'
+  }
+}
+
 mq.add('(min-width: 768px)', () => {
+  sel('.navbar-sticky').style.translate = '0'
+  window.removeEventListener('scroll', mobNavHandler)
   const navbarTl = gsap.to('.navbar-sticky', {
     keyframes: { '0%': { opacity: 0 }, '30%': { opacity: 1 }, '100%': { opacity: 1 } },
     yPercent: 100,
@@ -60,6 +72,7 @@ mq.add('(min-width: 768px)', () => {
   })
 })
 mq.add('(max-width: 767px)', () => {
+  window.addEventListener('scroll', mobNavHandler)
   // ScrollTrigger.create({
   //   // animation: gsap.fromTo('.navbar-sticky', { yPercent: -100 }, { yPercent: 100 }),
   //   animation: gsap.to('.navbar-sticky', { yPercent: 100, opacity: 1 }, 0),
@@ -68,6 +81,7 @@ mq.add('(max-width: 767px)', () => {
   //   toggleActions: 'play none none reverse',
   // })
 })
+
 devMode(0)
 function home() {
   // sliders
