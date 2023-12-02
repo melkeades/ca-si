@@ -66,29 +66,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 mq.add('(max-width: 767px)', () => {
   ScrollTrigger.create({
-    animation: gsap.to('.navbar-sticky>.navbar', { y: 100, opacity: 1 }, 0),
+    animation: gsap.to('.navbar-sticky', { yPercent: 100, opacity: 1 }, 0),
     trigger: '.navbar-wrap',
     start: vh(200) + ' top',
     toggleActions: 'play none none reverse',
   })
-  let options = {
-    threshold: [1],
-    // This doesn't work; changing the css ".sticky { top : -1 }" does cause the intersect logic
-    // to fire and "stuck == true", but according to mdn docs it sounds like setting rootMargin
-    root: document,
-    // this way should have the same effect.
-    rootMargin: '0px 0px 900px 0px',
-  }
-  let observer = new IntersectionObserver((entries) => {
-    console.log(entries)
-
-    if (entries[0].boundingClientRect.y < 0) {
-      console.log('1')
-    } else {
-      console.log('0')
-    }
-  })
-  // observer.observe(sel('.navbar-wrap'), options)
 })
 devMode(0)
 function home() {
