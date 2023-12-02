@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 mq.add('(max-width: 767px)', () => {
   ScrollTrigger.create({
-    animation: gsap.to('.navbar-sticky', { y: 0, opacity: 1 }, 0),
+    animation: gsap.to('.navbar-sticky .navbar', { y: 0, opacity: 1 }, 0),
     trigger: '.navbar-wrap',
     start: vh(200) + ' top',
     toggleActions: 'play none none reverse',
