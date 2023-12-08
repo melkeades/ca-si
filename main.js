@@ -43,9 +43,10 @@ switch (sel('.page-wrapper').getAttribute('data-page')) {
   default:
     console.log('unknown data-page')
 }
+const navbar$ = sel('.navbar-sticky')
+// due to stuttering scroll issues in ios
 let mobNavHandler = () => {
   const position = window.scrollY
-  const navbar$ = sel('.navbar-sticky')
   if (position > vh(100)) {
     navbar$.style.translate = '0 100%'
   } else {
@@ -54,9 +55,9 @@ let mobNavHandler = () => {
 }
 
 mq.add('(min-width: 768px)', () => {
-  sel('.navbar-sticky').style.translate = '0'
+  navbar$.style.translate = '0'
   window.removeEventListener('scroll', mobNavHandler)
-  const navbarTl = gsap.to('.navbar-sticky', {
+  const navbarTl = gsap.to(navbar$, {
     keyframes: { '0%': { opacity: 0 }, '30%': { opacity: 1 }, '100%': { opacity: 1 } },
     yPercent: 100,
     ease: 'linear',
@@ -84,6 +85,18 @@ mq.add('(max-width: 767px)', () => {
 
 devMode(0)
 function home() {
+  const heroBtn$ = sel('#aboutBtn')
+  const heroBg$ = sel('#aboutBg')
+  const heroClose$ = sel('#aboutX')
+  ;[heroClose$, heroBg$].forEach((el) => {
+    el.addEventListener('click', (e) => {
+      player.stopVideo()
+    })
+  })
+  heroBtn$.addEventListener('click', (e) => {
+    player.playVideo()
+  })
+
   // sliders
   testSliderInit()
   let logosSplide
