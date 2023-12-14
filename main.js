@@ -86,7 +86,7 @@ mq.add('(max-width: 767px)', () => {
   // })
 })
 
-devMode(1)
+devMode(0)
 function home() {
   const heroBtn$ = sel('#aboutBtn')
   const heroBg$ = sel('#aboutBg')
